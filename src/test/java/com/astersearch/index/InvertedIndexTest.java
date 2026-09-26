@@ -13,6 +13,18 @@ import com.astersearch.text.Tokenizer;
 
 class InvertedIndexTest {
 
+    @Test
+    void storesFrequenciesLengthsAndImmutablePostings() {
+        InvertedIndex index = new InvertedIndex(new Tokenizer());
+        index.add(new Document(1, "Java", "java search"));
+        index.add(new Document(2, "!", ""));
+        assertEquals(2, index.posting("java").get(1));
+        assertEquals(3, index.documentLength(1));
+        assertEquals(0, index.documentLength(2));
+        assertEquals(1.5, index.averageLength());
+        assertThrows(UnsupportedOperationException.class, () -> index.posting("java").put(3, 10));
+    }
+
     private InvertedIndex index;
 
     @BeforeEach
